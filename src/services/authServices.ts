@@ -9,11 +9,11 @@ import dotenv from "dotenv";
 dotenv.config();
 
 async function signUp(body: BodySignUp) {
-  const { username, email, password } = body;
+  const { username, email, password, image } = body;
   const userExists = await authRepository.findByEmail(email);
   if (userExists) throw conflictError("User");
 
-  await authRepository.createUser(username, email, password);
+  await authRepository.createUser(username, email, password, image);
 }
 
 async function signIn(body: BodySignIn) {
@@ -23,8 +23,7 @@ async function signIn(body: BodySignIn) {
 
   const passwordMatch = bcrypt.compareSync(password, user.password);
   if (!passwordMatch) throw unauthorizedError("Password");
-
-  const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET);
+  const token = jwt.sign(user, process.env.JWT_SECRET, { expiresIn: 86400 });
   return token;
 }
 

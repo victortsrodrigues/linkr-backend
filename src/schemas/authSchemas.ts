@@ -18,6 +18,11 @@ export const signUpSchema = joi.object<BodySignUp>({
     "string.empty": "Password cannot be empty",
     "any.required": "Password is required",
   }),
+  image: joi.string().trim().uri().required().messages({
+    "string.uri": "Please provide a valid image URL",
+    "string.empty": "Image URL cannot be empty",
+    "any.required": "Image URL is required",
+  })
 });
 
 export const signInSchema = joi.object<BodySignIn>({

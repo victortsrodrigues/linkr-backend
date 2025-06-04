@@ -9,12 +9,13 @@ async function findByEmail(email: string) {
   });
 }
 
-async function createUser(username: string, email: string, password: string) {
+async function createUser(username: string, email: string, password: string, image: string) {
   const saltRounds = 10;
   return await prismaClient.user.create({
     data: {
       username,
       email,
+      image,
       password: bcrypt.hashSync(password, saltRounds),
     },
   });
