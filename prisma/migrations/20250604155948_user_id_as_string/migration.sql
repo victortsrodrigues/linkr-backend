@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "posts" ALTER COLUMN "userId" SET DATA TYPE TEXT;
