@@ -1,5 +1,5 @@
 import joi from "joi";
-import { BodySignIn, BodySignUp } from "protocols/authProtocol";
+import { BodySignIn, BodySignUp } from "../protocols/authProtocol";
 
 export const signUpSchema = joi.object<BodySignUp>({
   username: joi.string().trim().min(2).required().messages({
