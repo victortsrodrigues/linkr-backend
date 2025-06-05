@@ -15,10 +15,14 @@ datasource db {
 
 model Posts {
   id    Int     @id @default(autoincrement())
-  userId String
+  userId Int
   url String
   description String
   likes String[] @default([])
   date DateTime @default(now())
+  dataTitle String
+  dataDescription String
+  dataImage String
+
   @@map("posts")
 }

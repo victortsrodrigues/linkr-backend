@@ -5,7 +5,7 @@ async function createPost(req: Request, res: Response) {
     const newPost = req.body;
     const user = res.locals.user;
 
-    const post = await postsService.createNewPost(user.id,newPost)
+    const post = await postsService.createNewPost(Number(user.id),newPost)
 
     res.status(201).send(post)
 }

@@ -1,12 +1,15 @@
 import { Posts } from "@prisma/client";
 import prisma from "../config/database";
 
-async function createPost(userId: string, newPost: Posts) {
+async function createPost(userId: number, newPost: Posts) {
     return await prisma.posts.create({
         data:{
             description: newPost.description ?? "",
             url: newPost.url,
-            userId
+            userId,
+            dataDescription: newPost.dataDescription,
+            dataImage: newPost.dataImage,
+            dataTitle: newPost.dataTitle
         }
     })
 }
