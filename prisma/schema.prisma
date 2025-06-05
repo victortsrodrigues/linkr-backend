@@ -20,6 +20,5 @@ model Posts {
   description String
   likes String[] @default([])
   date DateTime @default(now())
-
   @@map("posts")
 }
