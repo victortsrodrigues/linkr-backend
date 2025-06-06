@@ -10,8 +10,7 @@ async function createNewPost(userId: number, newPost: Posts) {
     metaDataComplete.image ??
     metaDataComplete["busca:image"] ??
     null;
-  if (!img)
-    img = "https://photos1.blogger.com/blogger/1325/1192/1600/corbranco.0.jpg";
+
   newPost = {
     ...newPost,
     dataTitle: metaDataComplete.title,
@@ -28,7 +27,21 @@ async function getAllPosts(page: number) {
   return allposts;
 }
 
+async function likePosts(userId: number, postId: number) {
+  const post = await postsRepository.getPostById(postId)
+  const alReadyLiked = post.likes.includes(userId)
+
+  if(!alReadyLiked){
+    post.likes.push(userId)
+  } else {
+    post.likes = post.likes.filter(user => user != userId)
+  }
+
+  return postsRepository.likePost(userId,post,postId);
+}
+
 export const postsService = {
   createNewPost,
   getAllPosts,
+  likePosts
 };

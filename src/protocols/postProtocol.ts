@@ -10,4 +10,5 @@ export type Posts = {
   dataDescription: string;
   dataImage: string;
   dataTitle: string;
+  likes: number[];
 };

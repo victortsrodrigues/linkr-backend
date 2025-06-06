@@ -18,7 +18,16 @@ async function getAllPosts(req: Request, res: Response) {
   res.status(200).send(allposts);
 }
 
+async function likePost(req: Request, res: Response) {
+  const postId = req.body;
+  const user = res.locals.user;
+
+  await postsService.likePosts(Number(user.id),postId);
+  res.sendStatus(204);
+}
+
 export const postsController = {
   createPost,
   getAllPosts,
+  likePost
 };

@@ -8,5 +8,6 @@ const postsRouter = Router();
 
 postsRouter.post("/newpost", validate_token, validateSchema(newPostSchema), postsController.createPost)
 postsRouter.get("/allposts", validate_token, postsController.getAllPosts)
+postsRouter.put("/likepost", validate_token, postsController.likePost)
 
 export default postsRouter;
