@@ -1,3 +1,4 @@
+import authRepository from "../repositories/authRepository";
 import { Posts } from "../protocols/postProtocol";
 import { postsRepository } from "../repositories/postsRepository";
 import urlMetadata from "url-metadata";
@@ -22,9 +23,34 @@ async function createNewPost(userId: number, newPost: Posts) {
 }
 
 async function getAllPosts(page: number) {
-  const allposts = await postsRepository.getPosts(page);
+  const allPosts = await postsRepository.getPosts(page);
 
-  return allposts;
+  const allPostsWithUser = await Promise.all(
+    allPosts.map( async post => {
+      const user = await authRepository.findById(post.userId)
+
+      const usersLike = await usersLikes(post.likes)
+
+      return {
+        ...post,
+        likes: usersLike,
+        userName: user.username,
+        userImage: user.image
+      }
+    })
+  )
+
+  async function usersLikes(idLikes:number[]) {
+    return idLikes.map( async userLikeId => {
+      const infoUser = await authRepository.findById(userLikeId)
+      const userName = infoUser.username.split(' ')
+
+      return {name: userName[0], id:userLikeId}
+    })
+   }
+
+
+  return allPostsWithUser;
 }
 
 async function likePosts(userId: number, postId: number) {
@@ -36,8 +62,9 @@ async function likePosts(userId: number, postId: number) {
   } else {
     post.likes = post.likes.filter(user => user != userId)
   }
+  console.log()
 
-  return postsRepository.likePost(userId,post,postId);
+  return await postsRepository.likePost(userId,post,postId);
 }
 
 export const postsService = {

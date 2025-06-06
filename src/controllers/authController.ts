@@ -14,9 +14,16 @@ async function signIn(req: Request, res: Response) {
   res.status(200).send(token);
 }
 
+async function usersSuggestions(req: Request, res: Response) {
+  const user = res.locals.user;
+  const suggestions = await authServices.usersSuggestions(Number(user.id))
+  res.status(204).send(suggestions);
+}
+
 const authController = {
   signUp,
   signIn,
+  usersSuggestions,
 };
 
 export default authController;

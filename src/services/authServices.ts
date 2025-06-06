@@ -27,9 +27,18 @@ async function signIn(body: BodySignIn) {
   return token;
 }
 
+async function usersSuggestions(userId: number) {
+  const takeSuggestionNumber = 5;
+  let allUsers = await authRepository.getUsersSuggestions(userId);
+  allUsers = allUsers.sort(() => Math.random() - 0.5);
+
+  return allUsers.splice(0,takeSuggestionNumber)
+}
+
 const authServices = {
   signUp,
   signIn,
+  usersSuggestions,
 };
 
 export default authServices;
