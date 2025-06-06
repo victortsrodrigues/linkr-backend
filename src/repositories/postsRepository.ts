@@ -22,10 +22,35 @@ async function getPosts(page: number) {
   return prismaClient.posts.findMany({
     skip: skipPosts,
     take: PAGE_LIMIT,
+    orderBy: {
+      date: "desc"
+    }
   });
 }
+
+async function likePost(userId: number, post: Posts, postId: number) {
+  return prismaClient.posts.update({
+    where:{
+      id:postId,
+    },
+    data:{
+      likes:post.likes
+    }
+  })
+}
+
+async function getPostById(postId: number) {
+  return prismaClient.posts.findFirst({
+    where: {
+      id: postId
+    }
+  })
+}
+
 
 export const postsRepository = {
   createPost,
   getPosts,
+  likePost,
+  getPostById
 };

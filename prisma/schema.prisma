@@ -12,7 +12,7 @@ model Posts {
   userId Int
   url String
   description String
-  likes String[] @default([])
+  likes Int[] @default([])
   date DateTime @default(now())
   dataTitle String
   dataDescription String
