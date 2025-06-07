@@ -11,5 +11,7 @@ postsRouter.post("/newpost", validate_token, validateSchema(newPostSchema), post
 postsRouter.get("/allposts", validate_token, postsController.getAllPosts)
 postsRouter.put("/likepost", validate_token, postsController.likePost)
 postsRouter.get("/suggestions", validate_token, authController.usersSuggestions)
+postsRouter.put("/updatepost/:id", validate_token, validateSchema(newPostSchema), postsController.updatePost)
+postsRouter.delete("/deletepost/:id", validate_token, postsController.deletePost);
 
 export default postsRouter;

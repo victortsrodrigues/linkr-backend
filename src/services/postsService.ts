@@ -2,6 +2,8 @@ import authRepository from "../repositories/authRepository";
 import { Posts } from "../protocols/postProtocol";
 import { postsRepository } from "../repositories/postsRepository";
 import urlMetadata from "url-metadata";
+import { notFoundError } from "../errors/notFoundError";
+import { unauthorizedError } from "../errors/unauthorizedError";
 
 async function createNewPost(userId: number, newPost: Posts) {
   const metaDataComplete = await urlMetadata(newPost.url);
@@ -67,8 +69,44 @@ async function likePosts(userId: number, postId: number) {
   return await postsRepository.likePost(userId,post,postId);
 }
 
+async function updatePost(postId: number, userId: number, data: { description: string, url: string }) {
+  // Busca o post para garantir que existe e pertence ao usuário
+  const post = await postsRepository.getPostById(postId);
+  if (!post) throw notFoundError("Post");
+  if (post.userId !== userId) throw unauthorizedError("You can't edit this post!");
+
+  // Atualiza os metadados da nova URL
+  const metaDataComplete = await urlMetadata(data.url);
+  let img =
+    metaDataComplete["og.image"] ??
+    metaDataComplete["twitter:image"] ??
+    metaDataComplete.image ??
+    metaDataComplete["busca:image"] ??
+    null;
+
+  const updatedPost = await postsRepository.updatePost(postId, {
+    description: data.description,
+    url: data.url,
+    dataDescription: metaDataComplete.description,
+    dataImage: img,
+    dataTitle: metaDataComplete.title
+  });
+
+  return updatedPost;
+}
+
+async function deletePost(postId: number, userId: number) {
+  const post = await postsRepository.getPostById(postId);
+  if (!post) throw notFoundError("Post");
+  if (post.userId !== userId) throw unauthorizedError("You can't delete this post!");
+
+  await postsRepository.deletePost(postId);
+}
+
 export const postsService = {
   createNewPost,
   getAllPosts,
-  likePosts
+  likePosts,
+  updatePost,
+  deletePost
 };
