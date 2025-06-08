@@ -47,10 +47,24 @@ async function getPostById(postId: number) {
   })
 }
 
+async function updatePost(postId: number, data: Partial<Posts>) {
+  return prismaClient.posts.update({
+    where: { id: postId },
+    data
+  });
+}
+
+async function deletePost(postId: number) {
+  return prismaClient.posts.delete({
+    where: { id: postId }
+  });
+}
 
 export const postsRepository = {
   createPost,
   getPosts,
   likePost,
-  getPostById
+  getPostById,
+  updatePost,
+  deletePost
 };

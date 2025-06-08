@@ -24,6 +24,12 @@ async function signIn(body: BodySignIn) {
   const passwordMatch = bcrypt.compareSync(password, user.password);
   if (!passwordMatch) throw unauthorizedError("Password");
   const token = jwt.sign(user, process.env.JWT_SECRET, { expiresIn: 86400 });
+  const response = {
+    id: user.id,
+    username: user.username,
+    image: user.image,
+    token: token,
+  };
   return token;
 }
 

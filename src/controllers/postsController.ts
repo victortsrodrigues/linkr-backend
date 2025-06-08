@@ -26,8 +26,27 @@ async function likePost(req: Request, res: Response) {
   res.sendStatus(204);
 }
 
+async function updatePost(req: Request, res: Response) {
+  const postId = Number(req.params.id);
+  const { description, url } = req.body;
+  const user = res.locals.user;
+
+  const updatedPost = await postsService.updatePost(postId, Number(user.id), { description, url });
+  res.status(200).send(updatedPost);
+}
+
+async function deletePost(req: Request, res: Response) {
+  const postId = Number(req.params.id);
+  const user = res.locals.user;
+
+  await postsService.deletePost(postId, Number(user.id));
+  res.sendStatus(204);
+}
+
 export const postsController = {
   createPost,
   getAllPosts,
-  likePost
+  likePost,
+  updatePost,
+  deletePost
 };
