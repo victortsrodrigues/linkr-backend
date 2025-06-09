@@ -30,7 +30,7 @@ async function signIn(body: BodySignIn) {
     image: user.image,
     token: token,
   };
-  return token;
+  return response;
 }
 
 async function usersSuggestions(userId: number) {
