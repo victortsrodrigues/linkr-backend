@@ -17,7 +17,7 @@ async function signIn(req: Request, res: Response) {
 async function usersSuggestions(req: Request, res: Response) {
   const user = res.locals.user;
   const suggestions = await authServices.usersSuggestions(Number(user.id))
-  res.status(204).send(suggestions);
+  res.status(200).send(suggestions);
 }
 
 const authController = {
