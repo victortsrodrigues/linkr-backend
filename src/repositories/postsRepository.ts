@@ -28,7 +28,7 @@ async function getPosts(page: number) {
   });
 }
 
-async function likePost(userId: number, post: Posts, postId: number) {
+async function likePost(post: Posts, postId: number) {
   return prismaClient.posts.update({
     where:{
       id:postId,
