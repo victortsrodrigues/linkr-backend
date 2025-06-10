@@ -41,19 +41,21 @@ async function getAllPosts(page: number) {
       }
     })
   )
+  return allPostsWithUser
+}
 
   async function usersLikes(idLikes:number[]) {
-    return idLikes.map( async userLikeId => {
-      const infoUser = await authRepository.findById(userLikeId)
-      const userName = infoUser.username.split(' ')
+    return Promise.all(
+      idLikes.map(async (userLikeId) => {
+        const infoUser = await authRepository.findById(userLikeId);
+        if (!infoUser) return null;
 
-      return {name: userName[0], id:userLikeId}
-    })
-   }
+        const userName = infoUser.username
+        return { name: userName, id: userLikeId };
+        })
+    )
+  }
 
-
-  return allPostsWithUser;
-}
 
 async function likePosts(userId: number, postId: number) {
   const post = await postsRepository.getPostById(postId)
@@ -64,9 +66,7 @@ async function likePosts(userId: number, postId: number) {
   } else {
     post.likes = post.likes.filter(user => user != userId)
   }
-  console.log()
-
-  return await postsRepository.likePost(userId,post,postId);
+  return await postsRepository.likePost(post,postId);
 }
 
 async function updatePost(postId: number, userId: number, data: { description: string, url: string }) {
