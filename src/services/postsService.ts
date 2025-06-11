@@ -66,16 +66,15 @@ async function likePosts(userId: number, postId: number) {
   } else {
     post.likes = post.likes.filter(user => user != userId)
   }
-  return await postsRepository.likePost(post,postId);
+
+  return await postsRepository.likePost(userId,post,postId);
 }
 
 async function updatePost(postId: number, userId: number, data: { description: string, url: string }) {
-  // Busca o post para garantir que existe e pertence ao usuário
   const post = await postsRepository.getPostById(postId);
   if (!post) throw notFoundError("Post");
   if (post.userId !== userId) throw unauthorizedError("You can't edit this post!");
 
-  // Atualiza os metadados da nova URL
   const metaDataComplete = await urlMetadata(data.url);
   let img =
     metaDataComplete["og.image"] ??
