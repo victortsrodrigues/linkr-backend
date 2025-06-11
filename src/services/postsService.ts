@@ -41,19 +41,21 @@ async function getAllPosts(page: number) {
       }
     })
   )
+  return allPostsWithUser
+}
 
   async function usersLikes(idLikes:number[]) {
-    return idLikes.map( async userLikeId => {
-      const infoUser = await authRepository.findById(userLikeId)
-      const userName = infoUser.username.split(' ')
+    return Promise.all(
+      idLikes.map(async (userLikeId) => {
+        const infoUser = await authRepository.findById(userLikeId);
+        if (!infoUser) return null;
 
-      return {name: userName[0], id:userLikeId}
-    })
-   }
+        const userName = infoUser.username
+        return { name: userName, id: userLikeId };
+        })
+    )
+  }
 
-
-  return allPostsWithUser;
-}
 
 async function likePosts(userId: number, postId: number) {
   const post = await postsRepository.getPostById(postId)

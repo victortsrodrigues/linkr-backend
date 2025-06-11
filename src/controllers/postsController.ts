@@ -22,7 +22,7 @@ async function likePost(req: Request, res: Response) {
   const postId = req.body;
   const user = res.locals.user;
 
-  await postsService.likePosts(Number(user.id),postId);
+  await postsService.likePosts(Number(user.id),postId.postId);
   res.sendStatus(204);
 }
 
