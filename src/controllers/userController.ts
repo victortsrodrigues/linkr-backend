@@ -7,6 +7,12 @@ async function getUserProfile(req: Request, res: Response) {
   res.status(200).send(profile);
 }
 
+async function getMyProfile(req: Request, res: Response) {
+  const userId = res.locals.user.id;
+  const profile = await userServices.getUserProfile(userId);
+  res.status(200).send(profile);
+}
+
 async function getUserPosts(req: Request, res: Response) {
   const userId = parseInt(req.params.id);
   const posts = await userServices.getUserPosts(userId);
@@ -55,6 +61,7 @@ async function getFollowing(req: Request, res: Response) {
 
 const userController = {
   getUserProfile,
+  getMyProfile,
   getUserPosts,
   followUser,
   unfollowUser,

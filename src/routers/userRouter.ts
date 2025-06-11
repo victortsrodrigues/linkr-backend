@@ -7,6 +7,7 @@ const userRouter = Router();
 // Rotas de perfil de usuário
 userRouter.get("/user/:id", validate_token, userController.getUserProfile);
 userRouter.get("/posts/user/:id", validate_token, userController.getUserPosts);
+userRouter.get("/posts/user/my-profile", validate_token, userController.getMyProfile);
 
 // Rotas de follow/unfollow
 userRouter.post("/follow/:id", validate_token, userController.followUser);
