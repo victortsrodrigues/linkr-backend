@@ -8,25 +8,44 @@ datasource db {
 }
 
 model Posts {
-  id    Int     @id @default(autoincrement())
-  userId Int
-  url String
-  description String
-  likes Int[] @default([])
-  date DateTime @default(now())
-  dataTitle String
+  id             Int      @id @default(autoincrement())
+  userId         Int
+  url            String
+  description    String
+  likes          Int[]    @default([])
+  date           DateTime @default(now())
+  dataTitle      String
   dataDescription String
-  dataImage String
+  dataImage      String
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("posts")
 }
 
 model User {
   id          Int          @id @default(autoincrement())
-  username        String
+  username    String
   email       String       @unique
   password    String
-  image     String
+  image       String
+  bio         String?      
+  age         Int?         
+  createdAt   DateTime     @default(now())
+  posts       Posts[]      // Relação com posts
+  followers   Follow[]     @relation("UserFollowers") // Relação de seguidores
+  following   Follow[]     @relation("UserFollowing") // Relação de seguindo
 
   @@map("users")
+}
+
+model Follow {
+  id          Int      @id @default(autoincrement())
+  followerId  Int      // ID do usuário que está seguindo
+  followingId Int      // ID do usuário que está sendo seguido
+  createdAt   DateTime @default(now())
+  follower    User     @relation("UserFollowing", fields: [followerId], references: [id], onDelete: Cascade)
+  following   User     @relation("UserFollowers", fields: [followingId], references: [id], onDelete: Cascade)
+
+  @@unique([followerId, followingId])
+  @@map("follows")
 }

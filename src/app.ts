@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import "express-async-errors";
 import authRouter from "./routers/authRouter";
 import postsRouter from "./routers/postsRouter";
+import userRouter from "./routers/userRouter";
 import errorHandler from "./middlewares/errorHandlerMiddleware";
 
 dotenv.config();
@@ -22,6 +23,7 @@ app.get("/health", (req: Request, res: Response) => {
 // Routes
 app.use(authRouter);
 app.use(postsRouter);
+app.use(userRouter);
 app.use(errorHandler);
 
 export default app;
