@@ -1,3 +1,4 @@
+import { UserProfile } from "../protocols/userProtocol";
 import prismaClient from "../database/client";
 
 async function getUserById(userId: number) {
@@ -129,6 +130,21 @@ async function getFollowing(userId: number, currentUserId: number) {
   return followingWithStatus;
 }
 
+async function updateMyProfile(userId: number, profile:UserProfile) {
+    const updatedProfile = await prismaClient.user.update({
+        where: {
+            id: userId,
+        },
+        data: {
+          age: profile.age,
+          bio: profile.bio,
+          username: profile.username,
+          image: profile.image
+        }
+    })
+    return updatedProfile
+}
+
 const userRepository = {
   getUserById,
   getUserPosts,
@@ -136,7 +152,8 @@ const userRepository = {
   unfollowUser,
   getFollowStatus,
   getFollowers,
-  getFollowing
+  getFollowing,
+  updateMyProfile
 };
 
 export default userRepository;

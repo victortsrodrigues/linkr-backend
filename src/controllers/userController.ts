@@ -59,6 +59,13 @@ async function getFollowing(req: Request, res: Response) {
   res.status(200).send(following);
 }
 
+async function updateMyProfile(req: Request, res: Response) {
+  const userId = res.locals.user.id;
+  const editedProfile = req.body;
+  const updatedProfile = await userServices.updateMyProfile(userId, editedProfile);
+  res.status(200).send(updatedProfile);
+}
+
 const userController = {
   getUserProfile,
   getMyProfile,
@@ -67,7 +74,8 @@ const userController = {
   unfollowUser,
   getFollowStatus,
   getFollowers,
-  getFollowing
+  getFollowing,
+  updateMyProfile
 };
 
 export default userController;

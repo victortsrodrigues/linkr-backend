@@ -74,6 +74,14 @@ async function getFollowing(userId: number, currentUserId: number): Promise<User
   return await userRepository.getFollowing(userId, currentUserId);
 }
 
+async function updateMyProfile(userId: number, profile:UserProfile) {
+  profile.age = Number(profile.age)
+
+  const updatedProfile = await userRepository.updateMyProfile(userId, profile);
+  
+  return updatedProfile
+}
+
 const userServices = {
   getUserProfile,
   getUserPosts,
@@ -81,7 +89,8 @@ const userServices = {
   unfollowUser,
   getFollowStatus,
   getFollowers,
-  getFollowing
+  getFollowing,
+  updateMyProfile
 };
 
 export default userServices;
