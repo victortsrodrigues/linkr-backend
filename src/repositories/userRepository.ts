@@ -30,6 +30,14 @@ async function getUserPosts(userId: number) {
     },
     orderBy: {
       date: 'desc'
+    },
+    include: {
+      user: {
+        select: {
+          username: true,
+          image: true
+        }
+      }
     }
   });
 }
