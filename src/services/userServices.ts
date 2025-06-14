@@ -3,6 +3,7 @@ import { UserFollow, UserProfile } from "../protocols/userProtocol";
 import userRepository from "../repositories/userRepository";
 import { conflictError } from "../errors/conflictError";
 import authRepository from "../repositories/authRepository";
+import { postsService } from "./postsService";
 
 async function getUserProfile(userId: number): Promise<UserProfile> {
   const user = await userRepository.getUserById(userId);
@@ -24,7 +25,24 @@ async function getUserPosts(userId: number, page: number) {
   const user = await userRepository.getUserById(userId);
   if (!user) throw notFoundError("User");
 
-  return await userRepository.getUserPosts(userId, page);
+  const postsUser = await userRepository.getUserPosts(userId, page);
+
+  const postsUserWithLikers = await Promise.all(
+    postsUser.map( async post => {
+      const user = await authRepository.findById(post.userId)
+
+      const usersLike = await postsService.usersLikes(post.likes)
+
+      return {
+        ...post,
+        likes: usersLike,
+        userName: user.username,
+        userImage: user.image
+      }
+    })
+  )
+
+  return postsUserWithLikers
 }
 
 async function followUser(followerId: number, followingId: number) {
