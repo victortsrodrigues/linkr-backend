@@ -14,8 +14,10 @@ async function getMyProfile(req: Request, res: Response) {
 }
 
 async function getUserPosts(req: Request, res: Response) {
+  let page = Number(req.query.page) || 1;
+  if (page < 0 || !(page % 2 === 0 || page % 2 === 1)) page = 1;
   const userId = parseInt(req.params.id);
-  const posts = await userServices.getUserPosts(userId);
+  const posts = await userServices.getUserPosts(userId, page);
   res.status(200).send(posts);
 }
 
@@ -66,6 +68,12 @@ async function updateMyProfile(req: Request, res: Response) {
   res.status(200).send(updatedProfile);
 }
 
+async function usersForSearch(req: Request, res: Response) {
+  const user = res.locals.user;
+  const allUsers = await userServices.usersForSearch(Number(user.id))
+  res.status(200).send(allUsers);
+}
+
 const userController = {
   getUserProfile,
   getMyProfile,
@@ -75,7 +83,8 @@ const userController = {
   getFollowStatus,
   getFollowers,
   getFollowing,
-  updateMyProfile
+  updateMyProfile,
+  usersForSearch
 };
 
 export default userController;

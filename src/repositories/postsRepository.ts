@@ -14,7 +14,7 @@ async function createPost(userId: number, newPost: Posts) {
   });
 }
 
-const PAGE_LIMIT = 20;
+const PAGE_LIMIT = 10;
 
 async function getPosts(page: number) {
   const skipPosts = (page - 1) * PAGE_LIMIT;

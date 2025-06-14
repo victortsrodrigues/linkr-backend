@@ -11,6 +11,8 @@ userRouter.get("/user/:id", validate_token, userController.getUserProfile);
 userRouter.get("/posts/user/:id", validate_token, userController.getUserPosts);
 userRouter.get("/myprofile", validate_token, userController.getMyProfile);
 
+userRouter.get("/linkers", validate_token, userController.usersForSearch);
+
 // Rotas de follow/unfollow
 userRouter.post("/follow/:id", validate_token, userController.followUser);
 userRouter.delete("/follow/:id", validate_token, userController.unfollowUser);

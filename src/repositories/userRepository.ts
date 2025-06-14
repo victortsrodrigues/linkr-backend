@@ -22,12 +22,15 @@ async function getUserById(userId: number) {
     }
   });
 }
-
-async function getUserPosts(userId: number) {
+const PAGE_LIMIT = 10;
+async function getUserPosts(userId: number, page: number) {
+  const skipPosts = (page - 1) * PAGE_LIMIT;
   return await prismaClient.posts.findMany({
     where: {
       userId: userId,
     },
+    skip: skipPosts,
+    take: PAGE_LIMIT,
     orderBy: {
       date: 'desc'
     },

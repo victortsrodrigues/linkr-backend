@@ -2,6 +2,7 @@ import { notFoundError } from "../errors/notFoundError";
 import { UserFollow, UserProfile } from "../protocols/userProtocol";
 import userRepository from "../repositories/userRepository";
 import { conflictError } from "../errors/conflictError";
+import authRepository from "../repositories/authRepository";
 
 async function getUserProfile(userId: number): Promise<UserProfile> {
   const user = await userRepository.getUserById(userId);
@@ -19,11 +20,11 @@ async function getUserProfile(userId: number): Promise<UserProfile> {
   };
 }
 
-async function getUserPosts(userId: number) {
+async function getUserPosts(userId: number, page: number) {
   const user = await userRepository.getUserById(userId);
   if (!user) throw notFoundError("User");
 
-  return await userRepository.getUserPosts(userId);
+  return await userRepository.getUserPosts(userId, page);
 }
 
 async function followUser(followerId: number, followingId: number) {
@@ -82,6 +83,12 @@ async function updateMyProfile(userId: number, profile:UserProfile) {
   return updatedProfile
 }
 
+async function usersForSearch(userId: number) {
+  let allUsers = await authRepository.getUsersSuggestions(userId);
+
+  return allUsers
+}
+
 const userServices = {
   getUserProfile,
   getUserPosts,
@@ -90,7 +97,8 @@ const userServices = {
   getFollowStatus,
   getFollowers,
   getFollowing,
-  updateMyProfile
+  updateMyProfile,
+  usersForSearch
 };
 
 export default userServices;
