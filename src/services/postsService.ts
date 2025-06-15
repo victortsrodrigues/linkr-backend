@@ -107,5 +107,6 @@ export const postsService = {
   getAllPosts,
   likePosts,
   updatePost,
-  deletePost
+  deletePost,
+  usersLikes
 };

@@ -6,6 +6,7 @@ import bcrypt from "bcrypt";
 import { unauthorizedError } from "../errors/unauthorizedError";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import userServices from "./userServices";
 dotenv.config();
 
 async function signUp(body: BodySignUp) {
@@ -37,8 +38,19 @@ async function usersSuggestions(userId: number) {
   const takeSuggestionNumber = 5;
   let allUsers = await authRepository.getUsersSuggestions(userId);
   allUsers = allUsers.sort(() => Math.random() - 0.5);
+  allUsers= allUsers.splice(0,takeSuggestionNumber)
+  allUsers = await Promise.all(
+    allUsers.map(async user => {
+      const statusFollow = await userServices.getFollowStatus(userId, user.id)
+      return {
+        ...user,
+        follower: statusFollow.isFollower, 
+        following: statusFollow.isFollowing
+      }
+    })
+  )
 
-  return allUsers.splice(0,takeSuggestionNumber)
+  return allUsers
 }
 
 const authServices = {
